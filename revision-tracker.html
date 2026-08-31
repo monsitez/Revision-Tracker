@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revision Schedule — Sept–Oct 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EEF2F1;
+    --paper: #FFFFFF;
+    --ink: #1B2A2E;
+    --ink-soft: #5A6B6E;
+    --line: #DCE4E2;
+    --not-started: #9AA5A3;
+    --in-progress: #C7861A;
+    --in-progress-bg: #FBEFD9;
+    --finished: #2F7D5E;
+    --finished-bg: #E1F0E6;
+    --today-ring: #2F6F7D;
+
+    --sub-地理: #4C7A5A;
+    --sub-历史: #A2632B;
+    --sub-科学: #2E6E8E;
+    --sub-英文: #7A4C8A;
+    --sub-华文: #A23B3B;
+    --sub-数学: #2E7A72;
+    --sub-piano: #8A5C7A;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:760px;margin:0 auto;padding:36px 20px 80px;}
+
+  header.top{margin-bottom:28px;}
+  header.top h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(28px,5vw,38px);
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  header.top p.range{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+
+  .summary{
+    display:flex;
+    gap:14px;
+    margin-top:20px;
+    flex-wrap:wrap;
+  }
+  .summary .stat{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 16px;
+    flex:1;
+    min-width:120px;
+  }
+  .summary .stat .num{
+    font-family:'Fraunces',serif;
+    font-size:24px;
+    font-weight:600;
+    display:block;
+    line-height:1.1;
+  }
+  .summary .stat .lbl{
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .summary .stat.finished .num{color:var(--finished);}
+  .summary .stat.progress .num{color:var(--in-progress);}
+
+  .jump{
+    margin-top:18px;
+  }
+  .jump button{
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--today-ring);
+    background:var(--paper);
+    border:1px solid var(--today-ring);
+    border-radius:8px;
+    padding:8px 14px;
+    cursor:pointer;
+  }
+  .jump button:hover{background:#E4EEF0;}
+
+  .day{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 18px 6px;
+    margin-bottom:16px;
+    scroll-margin-top:20px;
+  }
+  .day.today{
+    border-color:var(--today-ring);
+    box-shadow:0 0 0 2px rgba(47,111,125,0.15);
+  }
+  .day .day-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .day .day-head .weekday{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:18px;
+  }
+  .day .day-head .date{
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .day .today-badge{
+    font-size:11px;
+    font-weight:700;
+    color:var(--today-ring);
+    background:#E4EEF0;
+    border-radius:5px;
+    padding:2px 7px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+
+  .rest{
+    color:var(--ink-soft);
+    font-size:13.5px;
+    padding:6px 0 14px;
+    font-style:italic;
+  }
+
+  .slot{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 0;
+    border-top:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .slot:first-of-type{border-top:none;}
+
+  .slot .time{
+    font-size:13px;
+    color:var(--ink-soft);
+    width:118px;
+    flex-shrink:0;
+  }
+
+  .tag{
+    font-size:13px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+    color:#fff;
+    white-space:nowrap;
+  }
+
+  .status-area{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-left:auto;
+    flex-wrap:wrap;
+  }
+
+  .status-pill{
+    font-size:12px;
+    font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+    color:var(--not-started);
+    background:#F1F3F3;
+  }
+  .status-pill.in-progress{color:var(--in-progress);background:var(--in-progress-bg);}
+  .status-pill.finished{color:var(--finished);background:var(--finished-bg);}
+
+  .stamp{
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    border-radius:7px;
+    padding:6px 11px;
+    cursor:pointer;
+    border:1px solid transparent;
+  }
+  .btn-start{
+    background:var(--ink);
+    color:#fff;
+  }
+  .btn-start:hover{background:#33474D;}
+  .btn-finish{
+    background:var(--finished);
+    color:#fff;
+  }
+  .btn-finish:hover{background:#256B50;}
+  .btn-reset{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+  }
+  .btn-reset:hover{background:#F1F3F3;}
+
+  footer.note{
+    margin-top:28px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-align:center;
+  }
+
+  .load-msg{
+    text-align:center;
+    color:var(--ink-soft);
+    padding:60px 0;
+    font-size:14px;
+  }
+
+  @media (max-width:480px){
+    .slot{gap:8px;}
+    .slot .time{width:auto;font-size:12.5px;}
+    .status-area{width:100%;justify-content:flex-start;margin-left:0;margin-top:4px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Revision Schedule</h1>
+    <p class="range">1 September – 1 October 2026</p>
+    <div class="summary" id="summary"></div>
+    <div class="jump"><button id="jumpToday">Jump to today</button></div>
+  </header>
+
+  <div id="banner" style="display:none;background:#FBEFD9;color:#8A5A12;border:1px solid #E3C583;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:16px;"></div>
+
+  <div id="days"><div class="load-msg">Loading schedule…</div></div>
+
+  <footer class="note">Tap Start when revision begins and Finish when it ends — times are recorded automatically and saved on this device.</footer>
+</div>
+
+<script>
+const STORAGE_KEY = 'revision-schedule-v1';
+
+// weekday index: 0=Sun … 6=Sat
+const SCHEDULE = {
+  1: [ // Monday
+    {time:'5:00pm–6:00pm', subject:'地理', tone:'地理'},
+    {time:'6:00pm', subject:'Piano', tone:'piano'},
+    {time:'8:30pm–10:00pm', subject:'英文', tone:'英文'},
+  ],
+  2: [ // Tuesday
+    {time:'5:00pm–6:00pm', subject:'历史', tone:'历史'},
+    {time:'6:00pm', subject:'Piano', tone:'piano'},
+    {time:'8:30pm–10:00pm', subject:'华文', tone:'华文'},
+  ],
+  3: [ // Wednesday
+    {time:'4:45pm–6:00pm', subject:'科学', tone:'科学'},
+    {time:'6:00pm', subject:'Piano', tone:'piano'},
+    {time:'8:30pm–10:00pm', subject:'科学', tone:'科学'},
+  ],
+  4: [ // Thursday
+    {time:'5:00pm–6:00pm', subject:'地理', tone:'地理'},
+    {time:'6:00pm', subject:'Piano', tone:'piano'},
+    {time:'8:30pm–10:00pm', subject:'地理', tone:'地理'},
+  ],
+  5: [ // Friday
+    {time:'4:45pm–6:00pm', subject:'科学', tone:'科学'},
+  ],
+  6: [ // Saturday
+    {time:'9:30am–11:00am', subject:'科学', tone:'科学'},
+    {time:'12:00pm', subject:'Piano', tone:'piano'},
+    {time:'2:30pm–3:15pm', subject:'数学', tone:'数学'},
+    {time:'8:30pm–10:00pm', subject:'数学', tone:'数学'},
+  ],
+  0: [ // Sunday
+    {time:'9:00am–11:00am', subject:'科学', tone:'科学'},
+    {time:'12:00pm', subject:'Piano', tone:'piano'},
+    {time:'2:30pm–5:30pm', subject:'数学', tone:'数学'},
+    {time:'9:00pm–10:00pm', subject:'数学', tone:'数学'},
+  ],
+};
+
+const WEEKDAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function buildDateList(){
+  const dates = [];
+  let d = new Date(2026,8,1); // Sept 1 2026
+  const end = new Date(2026,9,1); // Oct 1 2026
+  while(d <= end){
+    dates.push(new Date(d));
+    d.setDate(d.getDate()+1);
+  }
+  return dates;
+}
+
+function dateKey(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function fmtDate(d){
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+function fmtTime(iso){
+  return new Date(iso).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+}
+
+function isSameDay(a,b){
+  return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+}
+
+const API_URL = 'https://script.google.com/macros/s/AKfycbzjn08Nujjlx6hG8ZtgFN8-34CoIhci-Q4UmU5e3Vmqe19FoIbTJ-woklVQ4gry2BJB/exec';
+
+let STATE = {};
+let saveWarningShown = false;
+
+async function loadState(){
+  try{
+    const res = await fetch(API_URL, {method:'GET'});
+    const data = await res.json();
+    STATE = data || {};
+  }catch(e){
+    STATE = {};
+    showBanner('Could not connect to the shared sheet. Showing an empty schedule — check your internet connection and reload.');
+  }
+}
+
+async function saveState(){
+  try{
+    await fetch(API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(STATE)
+    });
+  }catch(e){
+    if(!saveWarningShown){
+      saveWarningShown = true;
+      alert('Could not save your update to the shared sheet. Check your internet connection and try again.');
+    }
+  }
+}
+
+function showBanner(msg){
+  const el = document.getElementById('banner');
+  if(el){ el.textContent = msg; el.style.display = 'block'; }
+}
+
+function getSlotState(dKey, idx){
+  const day = STATE[dKey];
+  if(!day) return {status:'not-started'};
+  return day[idx] || {status:'not-started'};
+}
+
+function setSlotState(dKey, idx, data){
+  if(!STATE[dKey]) STATE[dKey] = {};
+  STATE[dKey][idx] = data;
+}
+
+async function startSlot(dKey, idx){
+  setSlotState(dKey, idx, {status:'in-progress', start:new Date().toISOString()});
+  render();
+  await saveState();
+}
+
+async function finishSlot(dKey, idx){
+  const cur = getSlotState(dKey, idx);
+  setSlotState(dKey, idx, {...cur, status:'finished', finish:new Date().toISOString()});
+  render();
+  await saveState();
+}
+
+async function resetSlot(dKey, idx){
+  setSlotState(dKey, idx, {status:'not-started'});
+  render();
+  await saveState();
+}
+
+function slotHTML(dKey, idx, slot){
+  const s = getSlotState(dKey, idx);
+  const status = s.status || 'not-started';
+
+  let pillLabel = 'Not started';
+  let pillClass = '';
+  if(status === 'in-progress'){ pillLabel = 'In progress'; pillClass = 'in-progress'; }
+  if(status === 'finished'){ pillLabel = 'Finished'; pillClass = 'finished'; }
+
+  let stamps = '';
+  if(s.start) stamps += `<span class="stamp">Started ${fmtTime(s.start)}</span>`;
+  if(s.finish) stamps += `<span class="stamp">Finished ${fmtTime(s.finish)}</span>`;
+
+  let actions = '';
+  if(status === 'not-started'){
+    actions = `<button class="btn btn-start" data-action="start" data-day="${dKey}" data-idx="${idx}">Start</button>`;
+  } else if(status === 'in-progress'){
+    actions = `<button class="btn btn-finish" data-action="finish" data-day="${dKey}" data-idx="${idx}">Finish</button>
+               <button class="btn btn-reset" data-action="reset" data-day="${dKey}" data-idx="${idx}">Undo</button>`;
+  } else if(status === 'finished'){
+    actions = `<button class="btn btn-reset" data-action="reset" data-day="${dKey}" data-idx="${idx}">Undo</button>`;
+  }
+
+  return `
+    <div class="slot">
+      <span class="time">${slot.time}</span>
+      <span class="tag" style="background:var(--sub-${slot.tone})">${slot.subject}</span>
+      <div class="status-area">
+        <span class="status-pill ${pillClass}">${pillLabel}</span>
+        ${stamps}
+        ${actions}
+      </div>
+    </div>`;
+}
+
+function computeSummary(){
+  let total = 0, finished = 0, inProgress = 0;
+  const dates = buildDateList();
+  dates.forEach(d=>{
+    const slots = SCHEDULE[d.getDay()] || [];
+    slots.forEach((slot, idx)=>{
+      total++;
+      const s = getSlotState(dateKey(d), idx);
+      if(s.status === 'finished') finished++;
+      if(s.status === 'in-progress') inProgress++;
+    });
+  });
+  return {total, finished, inProgress};
+}
+
+function renderSummary(){
+  const {total, finished, inProgress} = computeSummary();
+  document.getElementById('summary').innerHTML = `
+    <div class="stat finished"><span class="num">${finished}/${total}</span><span class="lbl">sessions finished</span></div>
+    <div class="stat progress"><span class="num">${inProgress}</span><span class="lbl">in progress now</span></div>
+  `;
+}
+
+function render(){
+  const today = new Date();
+  const dates = buildDateList();
+  const container = document.getElementById('days');
+  let html = '';
+
+  dates.forEach(d=>{
+    const wd = d.getDay();
+    const slots = SCHEDULE[wd] || [];
+    const dKey = dateKey(d);
+    const todayFlag = isSameDay(d, today);
+
+    html += `<div class="day ${todayFlag ? 'today' : ''}" id="day-${dKey}">
+      <div class="day-head">
+        <span><span class="weekday">${WEEKDAY_NAMES[wd]}</span>${todayFlag ? '<span class="today-badge">TODAY</span>' : ''}</span>
+        <span class="date">${fmtDate(d)}</span>
+      </div>`;
+
+    if(slots.length === 0){
+      html += `<div class="rest">No revision scheduled — rest day.</div>`;
+    } else {
+      slots.forEach((slot, idx)=>{
+        html += slotHTML(dKey, idx, slot);
+      });
+    }
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+  renderSummary();
+}
+
+document.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-action]');
+  if(!btn) return;
+  const {action, day, idx} = btn.dataset;
+  if(action === 'start') startSlot(day, idx);
+  if(action === 'finish') finishSlot(day, idx);
+  if(action === 'reset') resetSlot(day, idx);
+});
+
+document.getElementById('jumpToday').addEventListener('click', ()=>{
+  const today = new Date();
+  const el = document.getElementById(`day-${dateKey(today)}`);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+(async function init(){
+  await loadState();
+  render();
+  setInterval(async ()=>{
+    await loadState();
+    render();
+  }, 8000);
+})();
+</script>
+</body>
+</html>
